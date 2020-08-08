@@ -1,18 +1,21 @@
-
+/**
+ * Käytävät huoneiden välillä
+ * @author santt
+ */
 public class Corridor {
-    Floor floor;
     Cell[][] level;
-    int[] middlePoints;
     Cell currentCell;
     Room r;
 
     public Corridor(Floor level) {
-        this.floor = level;
+        this.r = level.getStage();
         this.level = level.getLevel();
     }
     
-    public void findMiddleOfCell() {
-        r = this.floor.getStage();
+    /**
+     * Etsii kentän huoneiden keskikohdat ja luo käytävät niiden avulla.
+     */
+    public void findCellsAndGenerate() {
         currentCell = new Cell(0);
         
         for (int i = 0; i < level.length; i++) {
@@ -62,7 +65,7 @@ public class Corridor {
             }
             
             checkSurroundingTiles(position1, position2);
-            if (r.tilesh[position1][position2].getType() != 2) {
+            if (r.tilesh[position1][position2].getType() != 3) {
                 r.tilesh[position1][position2] = new Tile(1);
             }
             if (position1 == y2 & position2 == x2) {
@@ -71,9 +74,9 @@ public class Corridor {
         }
     }
 
-    private void checkSurroundingTiles(int yy, int äx) {
-        for (int i = yy-1; i <= yy+1; i++) {
-            for (int j = äx-1; j <= äx+1; j++) {
+    private void checkSurroundingTiles(int y, int x) {
+        for (int i = y-1; i <= y+1; i++) {
+            for (int j = x-1; j <= x+1; j++) {
                 r.tilesh[i][j].checkTile();
             }
         }
