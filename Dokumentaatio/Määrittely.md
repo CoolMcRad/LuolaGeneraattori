@@ -1,6 +1,6 @@
-## Määrittelydokumentti
+# Määrittelydokumentti
 
-# Idea
+## Idea
 Luolastogeneraattori luo jonkinlaisen "luolan" tai kentän. Tarkoituksena on tehdä ennaltageneroituja ja pelattaessa kehittyviä kenttiä.
 Generaattori on pohjana jonkinlaiselle pelille tai monelle erilaiselle testi pelille.
 
@@ -9,7 +9,7 @@ Kentät tulee joko tallentaa (pysyvästi tai tilapäisesti) tai pystyä generoid
 
 Tavoitteena on, että maksimissa vain yksi lyhyehkö latausruutu ja muuten luolan generointi ei ole pelaajalle ilmiselvää.
 
-# Toteutus
+## Toteutus
 Luolastogeneraattorilla on luokka, joka luo kentän, kuten kerros tai pelin leveli. Kerroksella on huone luokka, tämä huone on kerroksen pohja.
 Huone luokka luo verkon johon se voi satunnaisesti annetun leveys ja pituus muuntujien avulla luoda huoneen. Huoneen sisällön voi arpoa.
 Huone merkitsee myös keskipisteensä.
@@ -20,6 +20,6 @@ Huoneet luodaan ja siojoitetaan soluihin satunnaisesti. Kun solussa on huone, se
 Lopuksi on käytävä luokka, joka luo käytävät huoneiden välille. Tämä onnistuu katsomalla aktiivit solut, tarkastamalla niiden huoneiden keskipisteet 
 ja yhdistämällä näitä käytävillä.
 
-# Lähteet
+## Lähteet
 
 Apuna käytetty http://roguebasin.roguelikedevelopment.org/index.php?title=Grid_Based_Dungeon_Generator
