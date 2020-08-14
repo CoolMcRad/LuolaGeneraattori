@@ -1,4 +1,3 @@
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Tile olio on luolaston tiiliskivi.
@@ -9,7 +8,8 @@ public class Tile {
     int type; // Tilen tyyppi numerona, esimerkiksi numero 1 on tyyppiä seinä
     String visual; // Miltä Tile näyttää, kuten X, O ... jne
     String[] types = {"X", " ", "*", "m", " "}; // "X" on muuri tai seinä, " " on tyhjä ruutu, "m" on huoneen keskipiste, "*" on jokin esine, "O" on huoneiden ulkopuolinen tila.
-
+    Randomizer satunnaisuus = new Randomizer();
+    
     public Tile(int type) {
         this.type = type;
         this.visual = this.types[type];
@@ -20,7 +20,7 @@ public class Tile {
      * Luo tiilin joka voi olla mitävain tyyppiä
      */
     public Tile() {
-        this.type =  ThreadLocalRandom.current().nextInt(0, 2 + 1); // Viimeinen tyyppi ei ole satunnaisuuden sisällä, koska se merkkaa tiiltä joka on huoneiden ulkopuolella
+        this.type =  satunnaisuus.randomBetween2(0, 2 + 1); // Viimeinen tyyppi ei ole satunnaisuuden sisällä, koska se merkkaa tiiltä joka on huoneiden ulkopuolella
         this.visual = this.types[this.type]; // Antaa tiilelle oikean visuaalin sen tyypin mukaan
     }
     
