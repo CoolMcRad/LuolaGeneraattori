@@ -11,8 +11,13 @@ public class Corridor {
     Room r;
     int size;
     boolean diagonal;
+    int oldt[] = {1};
+    int newt = 5;
+    int roadTile = 4;
+    int biome;
 
-    public Corridor(Floor level, int size, boolean diagonal) {
+    public Corridor(Floor level, int size, boolean diagonal, int biome) {
+        this.biome = biome;
         this.diagonal = diagonal;
         this.r = level.getStage();
         this.level = level.getLevel();
@@ -23,7 +28,7 @@ public class Corridor {
      * Etsii kentän huoneiden keskikohdat ja luo käytävät niiden avulla.
      */
     public void findCellsTopToBottomAndGenerate() {
-        currentCell = new Cell(0);
+        currentCell = new Cell(0,biome);
 
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level.length; j++) {
@@ -46,7 +51,7 @@ public class Corridor {
     }
 
     public void findCellsFromMiddleAndGenerate() {
-        currentCell = new Cell(0);
+        currentCell = new Cell(0,biome);
         int i = (level.length / 2) - 1;
         int j = i + 1;
 
@@ -93,44 +98,68 @@ public class Corridor {
         boolean down;
         boolean left;
         boolean right;
+        boolean enclosed;
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level.length; j++) {
-                up = booleanit(i, false);
-                down = booleanit(i, true);
-                left = booleanit(j, false);
-                right = booleanit(j, true);
+
+                enclosed = false;
                 Cell cell = level[i][j];
                 if (cell.isActive()) {
+                    up = booleanitHBorder(j, true, i);
+                    down = booleanitHBorder(j, false, i);
+                    left = booleanitVBorder(i, true, j);
+                    right = booleanitVBorder(i, false, j);
+                    if (!up && !down && !left && !right) {
+                        enclosed = true;
+                    }
                     int[] cellMiddle = cell.getRoom().getMiddleInStage();
-                    if (wallCoord[0] == -1) {
-                        wallCoord[0] = cellMiddle[0] + cell.size / 2 - 1;
+                    if (enclosed) {
+                        int[] o = this.oldt;
+                        int[] kor = {6,7,8};
+                        int v = roadTile;
+                        roadTile = 3;
+                        oldt = kor;
+                        if (booleanitHCell(j, true, i)) {
+                            prepCells(cell, level[i][j - 1]);
+                        } else if (booleanitHCell(j, false, i)) {
+                            prepCells(cell, level[i][j + 1]);
+                        } else if (booleanitVCell(i, true, j)) {
+                            prepCells(cell, level[i - 1][j]);
+                        } else if (booleanitVCell(i, false, j)) {
+                            prepCells(cell, level[i + 1][j]);
+                        }
+                        roadTile = v;
+                        oldt = o;
+                        continue;
+                    } else if (down) {
+                        wallCoord[0] = cellMiddle[0] + (cell.size / 2);
                         wallCoord[1] = cellMiddle[1];
+                    } else if (up) {
+                        wallCoord[0] = cellMiddle[0] - (cell.size / 2);
+                        wallCoord[1] = cellMiddle[1];
+                    } else if (left) {
+                        wallCoord[0] = cellMiddle[0];
+                        wallCoord[1] = cellMiddle[1] - (cell.size / 2);
+                    } else if (right) {
+                        wallCoord[0] = cellMiddle[0];
+                        wallCoord[1] = cellMiddle[1] + (cell.size / 2);
+                    } else {
+                        continue;
                     }
                     cell.setConnected(true);
-
-                    carveCorridorDiagonal(wallCoord[1], cellMiddle[1], wallCoord[0], cellMiddle[0]);
+                    if (diagonal) {
+                        carveCorridorDiagonal(wallCoord[1], cellMiddle[1], wallCoord[0], cellMiddle[0]);
+                    } else {
+                        carveCorridor(wallCoord[1], cellMiddle[1], wallCoord[0], cellMiddle[0]);
+                    }
                     wallCoord[0] = -1;
                 }
             }
         }
     }
 
-    public boolean booleanit(int x, boolean maxVaiMin) {
-        boolean onko = true;
-        if (maxVaiMin) {
-            if (x == 0) {
-                onko = false;
-            }
-        } else {
-            if (x == level.length) {
-                onko = false;
-            }
-        }
-        return onko;
-    }
-
     public void findCellsClosestAndGenerate() {
-        currentCell = new Cell(0);
+        currentCell = new Cell(0,biome);
         int i = 0;
         int j = 0;
         boolean apu = false;
@@ -175,6 +204,25 @@ public class Corridor {
 
         prepCells(cell, cell2);
 
+    }
+
+    public void allToOneCoord(int x, int y) {
+
+        for (int i = 0; i < level.length; i++) {
+            for (int j = 0; j < level.length; j++) {
+                Cell cell = level[i][j];
+                if (cell.isActive()) {
+
+                    int[] cellMiddle = cell.getRoom().getMiddleInStage();
+
+                    if (diagonal) {
+                        carveCorridorDiagonal(x, cellMiddle[1], y, cellMiddle[0]);
+                    } else {
+                        carveCorridor(x, cellMiddle[1], y, cellMiddle[0]);
+                    }
+                }
+            }
+        }
     }
 
     public void prepCells(Cell cell, Cell cell2) {
@@ -253,14 +301,85 @@ public class Corridor {
                     continue;
                 }
                 if (i == y - this.size | i == y + this.size | j == x + this.size | j == x - this.size) {
-                    r.tilesh[i][j].checkTile();
+                    r.tilesh[i][j].checkTile(this.oldt, this.newt);
                 } else {
-                    if (r.tilesh[i][j].getType() == 0) {
-                        r.tilesh[i][j] = new Tile(1);
+                    if (r.tilesh[i][j].getType() == 5 | r.tilesh[i][j].getType() > 6) {
+                        r.tilesh[i][j] = new Tile(roadTile,biome);
                     }
                 }
             }
         }
     }
 
+    public boolean booleanitHBorder(int x, boolean min, int y) {
+        boolean onko = true;
+        if (min) {
+            if (x == 0) {
+                onko = false;
+            } else if (level[y][x - 1].isActive()) {
+                onko = false;
+            }
+        } else {
+            if (x == level.length - 1) {
+                onko = false;
+            } else if (level[y][x + 1].isActive()) {
+                onko = false;
+            }
+        }
+        return onko;
+    }
+
+    public boolean booleanitVBorder(int x, boolean min, int y) {
+        boolean onko = true;
+        if (min) {
+            if (x == 0) {
+                onko = false;
+            } else if (level[x - 1][y].isActive()) {
+                onko = false;
+            }
+        } else {
+            if (x == level.length - 1) {
+                onko = false;
+            } else if (level[x + 1][y].isActive()) {
+                onko = false;
+            }
+        }
+        return onko;
+    }
+
+    public boolean booleanitVCell(int x, boolean min, int y) {
+        boolean onko = true;
+        if (min) {
+            if (x == 0) {
+                onko = false;
+            } else if (level[x - 1][y].isActive()) {
+                onko = true;
+            }
+        } else {
+            if (x == level.length - 1) {
+                onko = false;
+            } else if (level[x + 1][y].isActive()) {
+                onko = true;
+            }
+        }
+        return onko;
+    }
+
+    public boolean booleanitHCell(int x, boolean min, int y) {
+        boolean onko = false;
+        if (min) {
+            if (x == 0) {
+                onko = false;
+            } else if (level[x - 1][y].isActive()) {
+                onko = true;
+            }
+        } else {
+            if (x == level.length - 1) {
+                onko = false;
+            } else if (level[x + 1][y].isActive()) {
+                onko = true;
+            }
+        }
+        return onko;
+    }
 }

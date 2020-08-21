@@ -14,6 +14,8 @@ public class Floor {
     boolean randomHuoneKoko; // Ovatko huoneiden koot annettu koko - maximikoko vai aina annettu koko
     boolean randomOutside;
     Randomizer satunnaisuus = new Randomizer();
+    int limit = 0;
+    int biome;
 
     /**
      * generoi kentän annetulla solukoolla ja kentän koolla.
@@ -21,11 +23,12 @@ public class Floor {
      * @param size Kentän koko. size x size.
      * @param cellSize Solujen koko. (size/cellSize) x (size/cellSize)
      */
-    public Floor(int size, int cellSize, boolean randomRoomKoko, boolean randomOutside) {
+    public Floor(int size, int cellSize, boolean randomRoomKoko, boolean randomOutside, int biome) {
+        this.biome = biome;
         this.randomHuoneKoko = randomRoomKoko;
         this.size = (size / cellSize);
         this.cellSize = cellSize;
-        this.stage = new Room(size + 2, size + 2, false, true);
+        this.stage = new Room(size + 2, size + 2, false, true, 0);
         this.randomOutside = randomOutside;
         generateFloor();
     }
@@ -35,9 +38,9 @@ public class Floor {
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (this.randomOutside) {
-                    level[i][j] = new Cell(cellSize, true);
+                    level[i][j] = new Cell(cellSize, true,biome);
                 } else {
-                    level[i][j] = new Cell(cellSize);
+                    level[i][j] = new Cell(cellSize,biome);
                 }
             }
         }
@@ -49,9 +52,12 @@ public class Floor {
      *
      * @param amount Huoneiden määrä
      */
-    public void addRooms(int amount, int koko) {
+    public void addRooms(int amount, int koko, int type) {
         int width;
         int height;
+        if (amount != 0) {
+            amount -= this.limit;
+        }
         if (amount > level.length*level.length) amount = level.length*level.length;
         while (amount != 0) {
             int x;
@@ -72,7 +78,8 @@ public class Floor {
                 width = koko;
                 height = koko;
             }
-            level[x][y].setRoom(new Room(width, height, false, true), x, y, size);
+            Room r = new Room(width, height, false, true, type, biome);
+            level[x][y].setRoom(r, x, y, size);
 
             amount--;
         }
@@ -109,5 +116,10 @@ public class Floor {
 
     public void setStage(Room stage) {
         this.stage = stage;
+    }
+
+    void placeRoom(Room r, int x, int y, int cellSize) {
+        this.limit++;
+        getLevel()[x][y].setRoom(r, x, y, cellSize);
     }
 }

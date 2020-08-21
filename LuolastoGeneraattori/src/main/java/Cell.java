@@ -10,18 +10,18 @@ public class Cell {
     int size; // Solun koko
     boolean rand;
 
-    public Cell(int size) {
+    public Cell(int size, int biome) {
         this.size = size;
         this.active = false;
         this.connected = false;
-        this.room = new Room(size,size,4); // Solun huone on aluksi täynnä vain huoneiden ulkopuolisia tiilejä
+        this.room = new Room(size,size,1,biome); // Solun huone on aluksi täynnä vain huoneiden ulkopuolisia tiilejä
     }
     
-    public Cell(int size, int type) {
+    public Cell(int size, int type, int biome) {
         this.size = size;
         this.active = false;
         this.connected = false;
-        this.room = new Room(size,size,type); // Solun huone on aluksi täynnä vain annettua tyyppiä
+        this.room = new Room(size,size,type,biome); // Solun huone on aluksi täynnä vain annettua tyyppiä
     }
 
     public Cell(Room room, int size) {
@@ -31,11 +31,11 @@ public class Cell {
         this.size = size;
     }
     
-    public Cell(int size, boolean rand) {
+    public Cell(int size, boolean rand, int biome) {
         this.rand = rand;
         this.active = false;
         this.connected = false;
-        this.room = new Room(size,size,true,false);
+        this.room = new Room(size,size,true,false,biome);
         this.size = size;
     }
 

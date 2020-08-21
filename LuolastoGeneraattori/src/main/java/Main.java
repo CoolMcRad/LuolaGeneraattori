@@ -28,19 +28,22 @@ public class Main {
         int huoneKoko = cellSize / 2; // Puolikas koko maximista
 //        int huoneKoko = cellSize; // Maximikoko
         
+        int biome = 1;
+        
         // LUO KENTÄN, LISÄÄ HUONEET
-        Floor f1 = new Floor(levelSize, cellSize, true, false);
-        f1.addRooms(rooms, huoneKoko);
+        Floor f1 = new Floor(levelSize, cellSize, true, false, biome);
+        f1.addRooms(rooms, huoneKoko,0);
         
         // KÄYTÄVIEN KOKO
         int corridorSize = 2;
         
         // MILLÄ TAVALLA KÄYTÄVÄT
-        Corridor c = new Corridor(f1,corridorSize,false);
+        Corridor c = new Corridor(f1,corridorSize,true,biome);
 //        c.findCellsFromMiddleAndGenerate(); // Varmaan paras
 //        c.findCellsClosestAndGenerate();
 //        c.findCellsTopToBottomAndGenerate(); // Tylsin
 //        c.doorways();
+        c.allToOneCoord(levelSize/2, levelSize/2);
 
 //        c.ConnectTwo(0, 0, 0, 3);
 //        c.ConnectTwo(0, 0, 3, 0);

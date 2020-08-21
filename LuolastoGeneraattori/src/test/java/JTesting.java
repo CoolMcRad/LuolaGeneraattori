@@ -20,6 +20,8 @@ public class JTesting {
 
     int maxRooms = (levelSize / cellSize) * (levelSize / cellSize) + 1;
     int rooms = satunnaisuus.randomBetween(4, maxRooms);
+    
+    int biome = 0;
 
     private Floor f1;
 
@@ -40,7 +42,7 @@ public class JTesting {
 
     @Before
     public void setUp() {
-        t1 = new Tile(0);
+        t1 = new Tile(0,biome);
     }
 
     @After
@@ -52,23 +54,23 @@ public class JTesting {
 
     @Test
     public void tileCreation() {
-
+        biome = 0;
         assertEquals(0, t1.getType());
-        assertEquals("X", t1.getVisual());
+        assertEquals("m", t1.getVisual());
 
-        t1 = new Tile(1);
+        t1 = new Tile(1,biome);
         assertEquals(1, t1.getType());
         assertEquals(" ", t1.getVisual());
 
-        t1 = new Tile(2);
+        t1 = new Tile(2,biome);
         assertEquals(2, t1.getType());
-        assertEquals("*", t1.getVisual());
+        assertEquals("D", t1.getVisual());
 
-        t1 = new Tile(3);
+        t1 = new Tile(3,biome);
         assertEquals(3, t1.getType());
-        assertEquals("m", t1.getVisual());
+        assertEquals(" ", t1.getVisual());
 
-        t1 = new Tile(4);
+        t1 = new Tile(4,biome);
         assertEquals(4, t1.getType());
         assertEquals(" ", t1.getVisual());
     }
@@ -82,15 +84,15 @@ public class JTesting {
 
     @Test
     public void roomCreation() {
-        room = new Room(16, 16, false, true);
+        room = new Room(16, 16, false, true, biome);
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
                 if (i == 16 / 2 & j == 16 / 2) {
-                    assertEquals(room.getTilesh()[i][j].getType(), 3);
-                } else if (i == 0 | j == 0 | i == 15 | j == 15) {
                     assertEquals(room.getTilesh()[i][j].getType(), 0);
+                } else if (i == 0 | j == 0 | i == 15 | j == 15) {
+                    assertEquals(room.getTilesh()[i][j].getType(), 5);
                 } else {
-                    assertEquals(room.getTilesh()[i][j].getType(), 1);
+                    assertEquals(room.getTilesh()[i][j].getType(), 3);
                 }
             }
         }
@@ -98,8 +100,8 @@ public class JTesting {
 
     @Test
     public void floorCreation() {
-        f1 = new Floor(16, 8, false, false);
-        Room r = new Room(18, 18, false, true);
+        f1 = new Floor(16, 8, false, false,biome);
+        Room r = new Room(18, 18, false, true,biome);
         Cell c = new Cell(r, 17);
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
@@ -111,77 +113,135 @@ public class JTesting {
 
     @Test
     public void floor() {
-        f1 = new Floor(levelSize, cellSize, false, false);
+        f1 = new Floor(levelSize, cellSize, false, false, biome);
 
-        f1.addRooms(rooms, 4);
+        f1.addRooms(rooms, 4,0);
 
-        Corridor c = new Corridor(f1, 1, false);
+        Corridor c = new Corridor(f1, 1, false,biome);
         c.findCellsFromMiddleAndGenerate();
 
     }
     
     @Test
     public void semiTopToBottom() {
-        f1 = new Floor(levelSize, cellSize, true, false);
+        System.out.println("semiTopToBottom");
+        f1 = new Floor(levelSize, cellSize, true, false,biome);
 
-        f1.addRooms(rooms, cellSize/2);
+        f1.addRooms(rooms, cellSize/2,0);
 
-        Corridor c = new Corridor(f1, 1, true);
+        Corridor c = new Corridor(f1, 1, true,biome);
         c.findCellsTopToBottomAndGenerate();
         f1.printFloor();
     }
     
     @Test
     public void eriCorridor() {
-        f1 = new Floor(levelSize, cellSize, true, false);
+        System.out.println("eriCorridor");
+        f1 = new Floor(levelSize, cellSize, true, false,biome);
 
-        f1.addRooms(rooms, cellSize/2);
+        f1.addRooms(rooms, cellSize/2,0);
 
-        Corridor c = new Corridor(f1, 1, true);
+        Corridor c = new Corridor(f1, 1, true,biome);
         c.findCellsFromMiddleAndGenerate();
         f1.printFloor();
     }
 
     @Test
     public void ulkoTilaYksiTalo() {
-        f1 = new Floor(levelSize, cellSize, true, true);
+        System.out.println("ulkoTilaYksiTalo");
+        biome = 1;
+        f1 = new Floor(levelSize, cellSize, true, true, biome);
 
-        f1.addRooms(1, cellSize / 2);
+        f1.addRooms(5, cellSize / 2,0);
 
-        Corridor c = new Corridor(f1, 2, false);
+        Corridor c = new Corridor(f1, 2, false, biome);
         c.doorways();
 
         f1.printFloor();
-        t1 = new Tile();
+    }
+    
+    @Test
+    public void ulkoTilaDoorwaysTest() {
+        System.out.println("ulkoTilaDoorwaysTest");
+        cellSize = levelSize/3;
+        biome = 1;
+        f1 = new Floor(levelSize, cellSize, true, true, biome);
+
+        int k = f1.getLevel().length - 1;
+        Room r = new Room(cellSize-2, cellSize-2, false, true, biome);
+        f1.placeRoom(r,0,0,cellSize);
+        f1.placeRoom(r,k,k,cellSize);
+        f1.placeRoom(r,k,0,cellSize);
+        f1.placeRoom(r,0,k,cellSize);
+        f1.placeRoom(r,k/2,0,cellSize);
+        f1.placeRoom(r,0,k/2,cellSize);
+        f1.placeRoom(r,k/2,k,cellSize);
+        f1.placeRoom(r,k,k/2,cellSize);
+        
+        f1.addRooms(0, 0,0);
+
+        Corridor c = new Corridor(f1, 2, false, biome);
+        c.doorways();
+
+        f1.printFloor();
+    }
+    
+    @Test
+    public void ulkoTilaDoorwaysTest2() {
+        System.out.println("ulkoTilaDoorwaysTest2");
+        cellSize = levelSize/3;
+        biome = 1;
+        f1 = new Floor(levelSize, cellSize, true, true, biome);
+
+        int k = f1.getLevel().length - 1;
+        Room r = new Room(cellSize-2, cellSize-2, false, true, biome);
+        f1.placeRoom(r,k,k,cellSize);
+        f1.placeRoom(r,k,0,cellSize);
+        f1.placeRoom(r,0,k,cellSize);
+        f1.placeRoom(r,k/2,0,cellSize);
+        f1.placeRoom(r,0,k/2,cellSize);
+        f1.placeRoom(r,k,k/2,cellSize);
+        
+        f1.addRooms(0, 0,0);
+
+        Corridor c = new Corridor(f1, 2, false, biome);
+        c.doorways();
+
+        f1.printFloor();
     }
 
     @Test
     public void luola() {
-        f1 = new Floor(levelSize, cellSize, true, false);
+        System.out.println("luola");
+        biome = 0;
+        f1 = new Floor(levelSize, cellSize, true, false, biome);
 
-        f1.addRooms(rooms, cellSize / 2);
+        f1.addRooms(rooms, cellSize / 2,0);
 
-        Corridor c = new Corridor(f1, 3, false);
+        Corridor c = new Corridor(f1, 3, false, biome);
         c.findCellsFromMiddleAndGenerate();
 
         f1.printFloor();
-        t1 = new Tile();
     }
 
     @Test
-    public void linna() { // Tässä bugi, kun huone määrä vähän liian suuri, tapahtuu loputon looppi.
-        f1 = new Floor(levelSize, cellSize, false, false);
-
+    public void linna() {
+        System.out.println("linna");
+        biome = 2;
+        f1 = new Floor(levelSize, cellSize, false, false, biome);
+        
+        rooms = satunnaisuus.randomBetween(4, maxRooms);
+        
         int k = f1.getLevel().length - 1;
-        Room r = new Room(cellSize, cellSize, false, true);
-        f1.getLevel()[0][0].setRoom(r, 0, 0, cellSize);
-        f1.getLevel()[k][k].setRoom(r, k, k, cellSize);
-        f1.getLevel()[k][0].setRoom(r, k, 0, cellSize);
-        f1.getLevel()[0][k].setRoom(r, 0, k, cellSize);
+        Room r = new Room(cellSize, cellSize, false, true, biome);
+        f1.placeRoom(r,0,0,cellSize);
+        f1.placeRoom(r,k,k,cellSize);
+        f1.placeRoom(r,k,0,cellSize);
+        f1.placeRoom(r,0,k,cellSize);
 
-        f1.addRooms(rooms, cellSize / 2);
+        f1.addRooms(rooms, cellSize / 2,0);
 
-        Corridor c = new Corridor(f1, 3, false);
+        Corridor c = new Corridor(f1, 3, false, biome);
         c.findCellsFromMiddleAndGenerate();
         c.ConnectTwo(0, 0, 0, k);
         c.ConnectTwo(0, 0, k, 0);
@@ -189,37 +249,54 @@ public class JTesting {
         c.ConnectTwo(0, k, k, k);
 
         f1.printFloor();
-        t1 = new Tile();
     }
 
     @Test
     public void luolaDiagonal() {
-        f1 = new Floor(levelSize, cellSize, true, false);
+        System.out.println("luolaDiagonal");
+        biome = 0;
+        f1 = new Floor(levelSize, cellSize, true, false, biome);
 
-        f1.addRooms(rooms, cellSize / 2);
+        f1.addRooms(rooms, cellSize / 2, 0);
 
-        Corridor c = new Corridor(f1, 3, true);
+        Corridor c = new Corridor(f1, 3, true, biome);
         c.findCellsFromMiddleAndGenerate();
 
         f1.printFloor();
-        t1 = new Tile();
     }
 
     @Test
     public void crossRoom() {
+        System.out.println("crossRoom");
+        biome = 2;
 
-        Room cross = new Room(10, 10, false, true, true, 1);
+        Room cross = new Room(10, 10, false, false, 1, biome);
         cross.setType(1);
         cross.printRoom();
     }
+    
+    @Test
+    public void crossRooms() {
+        System.out.println("crossRooms");
+        biome = 2;
+
+        f1 = new Floor(levelSize, cellSize, false, false, biome);
+        f1.addRooms(rooms, cellSize/2,1);
+
+        Corridor c = new Corridor(f1, 2, false, biome);
+        c.findCellsFromMiddleAndGenerate();
+        f1.printFloor();
+    }
+    
     @Test
     public void crossLuola() {
-
-        f1 = new Floor(levelSize, cellSize, false, false);
+        System.out.println("crossLuola");
+        biome = 0;
+        f1 = new Floor(levelSize, cellSize, true, false, biome);
         int k = f1.getLevel().length - 1;
-        f1.addRooms(rooms, cellSize - 3);
+        f1.addRooms(rooms, cellSize - 3,0);
 
-        Corridor c = new Corridor(f1, 3, true);
+        Corridor c = new Corridor(f1, 3, true, biome);
         c.ConnectTwo(0, 0, 0, k);
         c.ConnectTwo(0, 0, k, 0);
         c.ConnectTwo(k, 0, k, k);
@@ -232,12 +309,13 @@ public class JTesting {
     
     @Test
     public void crossLuola2() {
-
-        f1 = new Floor(72, 72/6, false, false);
+        System.out.println("crossLuola2");
+        biome = 0;
+        f1 = new Floor(72, 72/6, false, false, biome);
         int k = f1.getLevel().length - 1;
-        f1.addRooms(rooms, cellSize - 3);
+        f1.addRooms(rooms, cellSize - 3,0);
 
-        Corridor c = new Corridor(f1, 2, true);
+        Corridor c = new Corridor(f1, 2, true, biome);
         c.ConnectTwo(0, 0, 0, k);
         c.ConnectTwo(0, 0, k, 0);
         c.ConnectTwo(k, 0, k, k);
@@ -252,19 +330,20 @@ public class JTesting {
     
     @Test
     public void semiDiagonallyYay() {
-
-        f1 = new Floor(levelSize, cellSize, false, false);
-
+        System.out.println("semiDiagonallyYay");
+        biome = 1;
+        f1 = new Floor(levelSize, cellSize, false, false, biome);
+        rooms = satunnaisuus.randomBetween(4, maxRooms);
         int k = f1.getLevel().length - 1;
-        Room r = new Room(cellSize, cellSize, 0);
-        f1.getLevel()[0][1].setRoom(r, 0, 1, cellSize);
-        f1.getLevel()[k][0].setRoom(r, k, 0, cellSize);
-        f1.getLevel()[0][3].setRoom(r, 0, 3, cellSize);
-        f1.getLevel()[k][2].setRoom(r, k, 2, cellSize);
+        Room r = new Room(cellSize, cellSize, false, true, biome);
+        f1.placeRoom(r,0,1,cellSize);
+        f1.placeRoom(r,k,0,cellSize);
+        f1.placeRoom(r,0,3,cellSize);
+        f1.placeRoom(r,k,2,cellSize);
         
-        f1.addRooms(rooms, cellSize / 2);
+        f1.addRooms(rooms, cellSize / 2,0);
         
-        Corridor c = new Corridor(f1, 3, true);
+        Corridor c = new Corridor(f1, 3, true, biome);
         c.ConnectTwo(0, 1, k, 0);
         c.ConnectTwo(0, 3, k, 2);
         c.ConnectTwo(0, 1, k, k);
