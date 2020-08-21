@@ -40,7 +40,7 @@ public class Floor {
                 if (this.randomOutside) {
                     level[i][j] = new Cell(cellSize, true,biome);
                 } else {
-                    level[i][j] = new Cell(cellSize,biome);
+                    level[i][j] = new Cell(cellSize,5,biome);
                 }
             }
         }

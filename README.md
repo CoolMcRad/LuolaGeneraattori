@@ -10,3 +10,5 @@ Tiralabra projekti, java ohjelma.
 [Viikko 3](https://github.com/CoolMcRad/LuolaGeneraattori/blob/master/Dokumentaatio/raporttiVko3.md)
 
 [Viikko 4](https://github.com/CoolMcRad/LuolaGeneraattori/blob/master/Dokumentaatio/raporttiVko4.md)
+
+[Viikko 5](https://github.com/CoolMcRad/LuolaGeneraattori/blob/master/Dokumentaatio/raporttiVko5.md)

@@ -13,9 +13,9 @@ public class Tile {
     boolean walkable = true;
     int biome;
 
-    String[] cave = {"m", " ", "D", " ", " ", "X", " ", "X", "X"};
-    String[] plains = {"m", " ", "D", "-", " ", "W", " ", "C", "T"};
-    String[] city = {"m", " ", "D", "-", "|", "X", " ", "C", "T"};
+    String[] cave = {" ", " ", "D", "-", "|", "X", " ", "X", "X"};
+    String[] plains = {" ", " ", "D", "-", "|", "W", " ", "C", "T"};
+    String[] city = {" ", " ", "D", "-", "|", "X", " ", "C", "T"};
     String[][] biomes = {cave, plains, city};
     Randomizer satunnaisuus = new Randomizer();
 
@@ -34,7 +34,7 @@ public class Tile {
      */
     public Tile(int biome) {
         this.biome = biome;
-        this.type = satunnaisuus.randomBetween2(6, 8+1);
+        this.type = satunnaisuus.randomBetween2(6, 8 + 1);
         if (type > 6 | type == 1 | type == 5) {
             this.walkable = false;
         }
@@ -49,6 +49,7 @@ public class Tile {
     public Tile(String type) {
         this.type = 10;
         this.visual = type;
+        this.walkable = false;
     }
 
     /**
@@ -59,13 +60,13 @@ public class Tile {
      */
     public void checkTile(int[] oldt, int newt) {
         for (int i : oldt) {
-            if (this.type == i ) { // Katsoo onko tiili kysyttyä
-            this.type = newt; // Korvaa tiilen annetulla tiilellä
-            if (type > 6 | type == 1 | type == 5) {
-                this.walkable = false;
+            if (this.type == i) { // Katsoo onko tiili kysyttyä
+                this.type = newt; // Korvaa tiilen annetulla tiilellä
+                if (type > 6 | type == 1 | type == 5) {
+                    this.walkable = false;
+                }
+                this.visual = this.biomes[this.biome][newt];
             }
-            this.visual = this.biomes[this.biome][newt];
-        }
         }
     }
 
@@ -75,6 +76,10 @@ public class Tile {
 
     public int getType() {
         return type;
+    }
+
+    public boolean isWalkable() {
+        return walkable;
     }
 
 }
