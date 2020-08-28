@@ -103,7 +103,7 @@ public class World {
         Tile lol = floors[currentFloor].getStage().tilesh[p.getPositionx()][p.getPositiony()];
         if (lol.getType() == 2) {
             if (lol.doorTo >= nextFloor) {
-                int uusbiome = this.satun.nano(0,3+1);
+                int uusbiome = this.satun.nano(0,5);
                 System.out.println(uusbiome);
                 switch (uusbiome) {
                     case 1:
@@ -115,6 +115,7 @@ public class World {
                     case 3:
                         createCity();
                         break;
+                    
                     default:
                         createCave();
                         break;

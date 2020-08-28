@@ -19,11 +19,11 @@ public class Randomizer {
     }
     
     public int nano(int eka,int toka) {
-        int palautus = 0;
-        palautus = (int) (System.nanoTime()%toka);
-        if (palautus < eka) {
-            palautus = (int) (System.nanoTime()%toka);
+        int palautus = (int) System.nanoTime()%toka;
+        while (palautus < eka) {
+            palautus = (int) System.nanoTime()%toka;
         }
+
         return palautus;
     }
 }
