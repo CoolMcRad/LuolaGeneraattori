@@ -1,9 +1,11 @@
+
 import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class Main {
+
     JFrame frame = new JFrame("Jep");
     JPanel panel = new JPanel();
 
@@ -58,24 +60,15 @@ public class Main {
 //        c.ConnectTwo(3, 0, 0, 3);
 //        c.ConnectTwo(0, 0, 3, 3);
         //f1.printFloor();
-        
-        
+
         World w = new World();
 //        w.createCave();
-        w.createCaveDia();
+//        w.createCaveDia();
 //        w.createPlain();
-        w.playerSpawn();
-        w.playerTest();
-        
-        while (true) {
-            String input = s.nextLine();
-            if (input.equals("q")) {
-                break;
-            }
-            w.playerTestMove(input);
-            w.printFloor(0);
-        }
-        
+//        w.firstFloor();
+//        w.createCity();
+        GUI gui = new GUI(w);
+
     }
 
 }

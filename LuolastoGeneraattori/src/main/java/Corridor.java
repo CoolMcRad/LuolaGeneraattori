@@ -303,7 +303,7 @@ public class Corridor {
                 if (i == y - this.size | i == y + this.size | j == x + this.size | j == x - this.size) {
                     r.tilesh[i][j].checkTile(this.oldt, this.newt);
                 } else {
-                    if (r.tilesh[i][j].getType() == 5 | r.tilesh[i][j].getType() > 6) {
+                    if (!r.tilesh[i][j].isInRoom()) {
                         r.tilesh[i][j] = new Tile(roadTile,biome);
                     }
                 }

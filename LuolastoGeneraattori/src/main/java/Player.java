@@ -14,19 +14,19 @@ public class Player {
     }
 
     public void moveLeft() {
-        this.positiony--;
-    }
-
-    public void moveRight() {
-        this.positiony++;
-    }
-
-    public void moveUp() {
         this.positionx--;
     }
 
-    public void moveDown() {
+    public void moveRight() {
         this.positionx++;
+    }
+
+    public void moveUp() {
+        this.positiony--;
+    }
+
+    public void moveDown() {
+        this.positiony++;
     }
 
     public int getPositionx() {

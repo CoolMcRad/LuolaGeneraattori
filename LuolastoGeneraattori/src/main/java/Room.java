@@ -57,39 +57,41 @@ public class Room {
      * sisältö on satunnainen (toistaiseksi pois käytöstä)
      */
     private void generate() {
-        int h = (this.height ) / 3;
-        int w = (this.width ) / 3;
+        int h = (this.height) / 3;
+        int w = (this.width) / 3;
 
         this.tilesh = new Tile[this.height][this.width]; // Ruudukko jossa käytössä Tile luokka
         for (int i = 0; i <= this.height - 1; i++) {
             for (int j = 0; j <= this.width - 1; j++) {
                 if (this.roomType == 1) { // Jos tyyppi 1 niin muodostuu ruksi
-                    if (j < w & i < h & (j == w-1 | i == h-1) | j > w + w & i > h + h & (j == w+w+1 | i == h+h+1) | j > w + w & i < h & (j == w+w+1 | i == h-1) | j < w & i > h + h & (j == w-1 | i == h+h+1)) {
-                        this.tilesh[i][j] = new Tile(5,biome);
+                    if (j < w & i < h & (j == w - 1 | i == h - 1) | j > w + w & i > h + h & (j == w + w + 1 | i == h + h + 1) | j > w + w & i < h & (j == w + w + 1 | i == h - 1) | j < w & i > h + h & (j == w - 1 | i == h + h + 1)) {
+                        this.tilesh[i][j] = new Tile(5, biome);
                         continue;
                     }
                 }
                 if (i == 0 | j == 0 | i == this.height - 1 | j == this.width - 1) {
                     if (border) {
-                        this.tilesh[i][j] = new Tile(5,biome); // Huoneen seinät generoidaan tässä
+                        this.tilesh[i][j] = new Tile(5, biome); // Huoneen seinät generoidaan tässä
+//                        this.tilesh[i][j].setInRoom(true);
                     } else {
-                        if (this.rand) {
-                            this.tilesh[i][j] = new Tile(biome);
-                        } else {
-                            this.tilesh[i][j] = new Tile(3,biome); // Huoneen sisältö generoidaan tässä
-                        }
+                        this.tilesh[i][j] = new Tile(6, biome); // Huoneen sisältö generoidaan tässä
                     }
                     continue;
                 }
                 if (i == this.height / 2 & j == this.width / 2) {
                     middle[0] = i;
                     middle[1] = j;
-                    this.tilesh[i][j] = new Tile(0,biome); // Merkataan huoneen keskipiste
+                    this.tilesh[i][j] = new Tile(0, biome); // Merkataan huoneen keskipiste
+                    this.tilesh[i][j].setInRoom(true);
                 } else {
                     if (this.rand) {
-                        this.tilesh[i][j] = new Tile(biome);
+                        if (checkIfObstacles(i, j)) {
+                            this.tilesh[i][j] = new Tile(6, biome);
+                        } else {
+                            this.tilesh[i][j] = new Tile(biome);
+                        }
                     } else {
-                        this.tilesh[i][j] = new Tile(3,biome); // Huoneen sisältö generoidaan tässä
+                        this.tilesh[i][j] = new Tile(3, biome); // Huoneen sisältö generoidaan tässä
                     }
                 }
             }
@@ -106,15 +108,15 @@ public class Room {
         for (int i = 0; i <= this.height - 1; i++) {
             for (int j = 0; j <= this.width - 1; j++) {
                 if (i == 0 | j == 0 | i == this.height - 1 | j == this.width - 1) {
-                    this.tilesh[i][j] = new Tile(type,biome);
+                    this.tilesh[i][j] = new Tile(type, biome);
                     continue;
                 }
                 if (i == this.height / 2 & j == this.width / 2) {
                     middle[0] = i;
                     middle[1] = j;
-                    this.tilesh[i][j] = new Tile(0,biome);
+                    this.tilesh[i][j] = new Tile(0, biome);
                 } else {
-                    this.tilesh[i][j] = new Tile(type,biome);
+                    this.tilesh[i][j] = new Tile(type, biome);
                 }
             }
         }
@@ -128,17 +130,17 @@ public class Room {
         for (int i = 0; i <= this.height - 1; i++) {
             for (int j = 0; j <= this.width - 1; j++) {
                 if (j < w & i < h | j > w + w & i > h + h) {
-                    this.tilesh[i][j] = new Tile(5,biome);
+                    this.tilesh[i][j] = new Tile(5, biome);
                     continue;
                 }
                 if (i == 0 | j == 0 | i == this.height - 1 | j == this.width - 1) {
                     if (border) {
-                        this.tilesh[i][j] = new Tile(5,biome); // Huoneen seinät generoidaan tässä
+                        this.tilesh[i][j] = new Tile(5, biome); // Huoneen seinät generoidaan tässä
                     } else {
                         if (this.rand) {
                             this.tilesh[i][j] = new Tile(biome);
                         } else {
-                            this.tilesh[i][j] = new Tile(3,biome); // Huoneen sisältö generoidaan tässä
+                            this.tilesh[i][j] = new Tile(3, biome); // Huoneen sisältö generoidaan tässä
                         }
                     }
                     continue;
@@ -146,12 +148,12 @@ public class Room {
                 if (i == this.height / 2 & j == this.width / 2) {
                     middle[0] = i;
                     middle[1] = j;
-                    this.tilesh[i][j] = new Tile(0,biome); // Merkataan huoneen keskipiste
+                    this.tilesh[i][j] = new Tile(0, biome); // Merkataan huoneen keskipiste
                 } else {
                     if (this.rand) {
                         this.tilesh[i][j] = new Tile(biome);
                     } else {
-                        this.tilesh[i][j] = new Tile(3,biome); // Huoneen sisältö generoidaan tässä
+                        this.tilesh[i][j] = new Tile(3); // Huoneen sisältö generoidaan tässä
                     }
                 }
             }
@@ -166,6 +168,7 @@ public class Room {
      */
     public void insertRoom(Room r, int coordx, int coordy, int s) {
         // Satunnaiset x ja y koordinaatit
+        this.tilesh[middle[0]][middle[1]] = new Tile(6,r.biome);
         this.gravity = 2;
         int[] grav = gravity(0, this.width - r.getWidth() + 1, this.height - r.getHeight() + 1, coordx, coordy, s - 1);
         int x = grav[0];
@@ -235,7 +238,6 @@ public class Room {
      * @param x Apu muuntuja huoneen oikealle paikalle pistämiseen
      */
     public void insertRoomNotRandom(Room r, int y, int x) {
-
         Tile[][] t = r.getTilesh();
         int h = 0;
         int w = 0;
@@ -292,5 +294,9 @@ public class Room {
     public void setMiddleInStage(int f1, int f2) {
         this.middleInStage[0] = f1;
         this.middleInStage[1] = f2;
+    }
+
+    private boolean checkIfObstacles(int i, int j) {
+        return !this.tilesh[i - 1][j].walkable | !this.tilesh[i - 1][j - 1].walkable | !this.tilesh[i][j - 1].walkable;
     }
 }
