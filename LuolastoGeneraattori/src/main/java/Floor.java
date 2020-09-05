@@ -14,9 +14,12 @@ public class Floor {
     boolean randomHuoneKoko; // Ovatko huoneiden koot annettu koko - maximikoko vai aina annettu koko
     boolean randomOutside;
     Randomizer satunnaisuus = new Randomizer();
+    int[] exit = new int[2];
     int limit = 0;
     int biome;
-
+    Enemy[] e = new Enemy[20];
+    int ecount = 0;
+    
     /**
      * generoi kentän annetulla solukoolla ja kentän koolla.
      *
@@ -38,9 +41,9 @@ public class Floor {
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (this.randomOutside) {
-                    level[i][j] = new Cell(cellSize, true,biome);
+                    level[i][j] = new Cell(cellSize, true, biome);
                 } else {
-                    level[i][j] = new Cell(cellSize,5,biome);
+                    level[i][j] = new Cell(cellSize, 5, biome);
                 }
             }
         }
@@ -58,7 +61,9 @@ public class Floor {
         if (amount != 0) {
             amount -= this.limit;
         }
-        if (amount > level.length*level.length) amount = level.length*level.length;
+        if (amount > level.length * level.length) {
+            amount = level.length * level.length;
+        }
         while (amount != 0) {
             int x;
             int y;
@@ -121,5 +126,30 @@ public class Floor {
     void placeRoom(Room r, int x, int y, int cellSize) {
         this.limit++;
         getLevel()[x][y].setRoom(r, x, y, cellSize);
+    }
+
+    public void setExit(int x, int y) {
+        this.exit[0] = x;
+        this.exit[1] = y;
+    }
+
+    public int[] getExit() {
+        return exit;
+    }
+
+    public Enemy[] getE() {
+        return e;
+    }
+
+    public int getEcount() {
+        return ecount;
+    }
+
+    public void addEnemy(Enemy e){
+        int count = getEcount();
+        if (count < 19) {
+            this.e[count] = e;
+            this.ecount++;
+        }
     }
 }

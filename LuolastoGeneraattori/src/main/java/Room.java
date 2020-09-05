@@ -122,44 +122,6 @@ public class Room {
         }
     }
 
-    // WIP
-    private void generateRound() {
-        int h = (this.height - 1) / 3;
-        int w = (this.width - 1) / 3;
-        this.tilesh = new Tile[this.height][this.width]; // Ruudukko jossa käytössä Tile luokka
-        for (int i = 0; i <= this.height - 1; i++) {
-            for (int j = 0; j <= this.width - 1; j++) {
-                if (j < w & i < h | j > w + w & i > h + h) {
-                    this.tilesh[i][j] = new Tile(5, biome);
-                    continue;
-                }
-                if (i == 0 | j == 0 | i == this.height - 1 | j == this.width - 1) {
-                    if (border) {
-                        this.tilesh[i][j] = new Tile(5, biome); // Huoneen seinät generoidaan tässä
-                    } else {
-                        if (this.rand) {
-                            this.tilesh[i][j] = new Tile(biome);
-                        } else {
-                            this.tilesh[i][j] = new Tile(3, biome); // Huoneen sisältö generoidaan tässä
-                        }
-                    }
-                    continue;
-                }
-                if (i == this.height / 2 & j == this.width / 2) {
-                    middle[0] = i;
-                    middle[1] = j;
-                    this.tilesh[i][j] = new Tile(0, biome); // Merkataan huoneen keskipiste
-                } else {
-                    if (this.rand) {
-                        this.tilesh[i][j] = new Tile(biome);
-                    } else {
-                        this.tilesh[i][j] = new Tile(3); // Huoneen sisältö generoidaan tässä
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * insertRoom lisää nykyisen huoneen päälle annetun huoneen korvaamalla
      * aiemmat Tile oliot gridissä.
@@ -168,7 +130,7 @@ public class Room {
      */
     public void insertRoom(Room r, int coordx, int coordy, int s) {
         // Satunnaiset x ja y koordinaatit
-        this.tilesh[middle[0]][middle[1]] = new Tile(6,r.biome);
+        this.tilesh[middle[0]][middle[1]] = new Tile(6, r.biome);
         this.gravity = 2;
         int[] grav = gravity(0, this.width - r.getWidth() + 1, this.height - r.getHeight() + 1, coordx, coordy, s - 1);
         int x = grav[0];

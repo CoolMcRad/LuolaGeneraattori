@@ -17,6 +17,10 @@ public class Tile {
     boolean inRoom = false;
     int biome;
     Image image;
+    Image impact = new ImageIcon(this.getClass().getResource("impact30.png")).getImage();
+    Image target = new ImageIcon(this.getClass().getResource("target31.png")).getImage();
+    boolean hit = false;
+    boolean toBeHit = false;
 
     String[] cave = {" ", " ", "D", "-", "|", "X", " ", "X", "X"};
     String[] plains = {" ", " ", "D", "-", "|", "W", " ", "C", "T"};
@@ -29,6 +33,10 @@ public class Tile {
         this.type = type;
         if (type > 6 | type == 1 | type == 5) {
             this.walkable = false;
+            this.inRoom = false;
+        }
+        if (type == 6) {
+            this.inRoom = false;
         }
         if (type == 3 | type == 2) {
             this.inRoom = true;
@@ -37,8 +45,8 @@ public class Tile {
         this.visual = this.biomes[biome][this.type];
         setImage();
     }
-    
-        public Tile(int type, int biome, int doorTo) {
+
+    public Tile(int type, int biome, int doorTo) {
         this.type = type;
         this.walkable = true;
         this.inRoom = true;
@@ -72,10 +80,21 @@ public class Tile {
      * @param type Täytyy antaa olion visuaali
      */
     public Tile(String type) {
-        this.type = 10;
+        if (type.equals("@")) {
+            this.type = 10;
+            this.biome = 20;
+            this.walkable = false;
+        } else if (type.equals("E")) {
+            this.type = 11;
+            this.biome = 21;
+            this.walkable = false;
+        } else if (type.equals("D")) {
+            this.type = 12;
+            this.biome = 22;
+            this.walkable = true;
+        }
         this.visual = type;
-        this.walkable = false;
-        this.biome = 20;
+
         setImage();
     }
 
@@ -134,17 +153,26 @@ public class Tile {
             case 20:
                 p = "player" + p;
                 break;
+            case 21:
+                p = "enemy" + p;
+                break;
+            case 22:
+                p = "dead2" + p;
+                break;
             default:
                 break;
         }
         path = p;
-//        ImageIcon ima = new ImageIcon(getClass().getResource(path));
         Image imag = new ImageIcon(this.getClass().getResource(path)).getImage();
         this.image = imag;
     }
 
     public Image getImage() {
         return image;
+    }
+    
+    public void overrideImage(Image imag) {
+        this.image = imag;
     }
 
     public void setInRoom(boolean inRoom) {

@@ -11,9 +11,18 @@ public class Randomizer {
     }
     
     public int randomBetween2(int eka, int toka) {
-        int palautus = 0;
-        if (palautus != eka) {
-            palautus = ThreadLocalRandom.current().nextInt(eka, toka);
+        int palautus = ThreadLocalRandom.current().nextInt(eka, toka+20);
+        if (palautus >= toka) {
+            palautus = eka;
+        }
+        return palautus;
+    }
+    
+    public boolean enemyChance() {
+        int chance = ThreadLocalRandom.current().nextInt(0, 30);
+        boolean palautus = false;
+        if (chance == 0) {
+            palautus = true;
         }
         return palautus;
     }

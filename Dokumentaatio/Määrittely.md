@@ -20,6 +20,8 @@ Huoneet luodaan ja siojoitetaan soluihin satunnaisesti. Kun solussa on huone, se
 Lopuksi on käytävä luokka, joka luo käytävät huoneiden välille. Tämä onnistuu katsomalla aktiivit solut, tarkastamalla niiden huoneiden keskipisteet 
 ja yhdistämällä näitä käytävillä.
 
+On lisäksi World luokka pitää muistissa kaikki kentät ja hoitaa peli lokiigan eli pelaajan ja vihollisten liikkumisen.
+
 ## Lähteet
 
 Apuna käytetty http://roguebasin.roguelikedevelopment.org/index.php?title=Grid_Based_Dungeon_Generator

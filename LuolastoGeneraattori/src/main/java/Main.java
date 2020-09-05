@@ -60,7 +60,12 @@ public class Main {
 //        c.ConnectTwo(3, 0, 0, 3);
 //        c.ConnectTwo(0, 0, 3, 3);
         //f1.printFloor();
-
+        int eka = 5;
+        int toka = 9;
+        Randomizer rand = new Randomizer();
+        int lol = (rand.randomBetween(eka, toka));
+        System.out.println(lol);
+        
         World w = new World();
 //        w.createCave();
 //        w.createCaveDia();

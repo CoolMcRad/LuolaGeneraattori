@@ -28,7 +28,7 @@ public class Corridor {
      * Etsii kentän huoneiden keskikohdat ja luo käytävät niiden avulla.
      */
     public void findCellsTopToBottomAndGenerate() {
-        currentCell = new Cell(0,biome);
+        currentCell = new Cell(0, biome);
 
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level.length; j++) {
@@ -51,7 +51,7 @@ public class Corridor {
     }
 
     public void findCellsFromMiddleAndGenerate() {
-        currentCell = new Cell(0,biome);
+        currentCell = new Cell(0, biome);
         int i = (level.length / 2) - 1;
         int j = i + 1;
 
@@ -115,18 +115,21 @@ public class Corridor {
                     int[] cellMiddle = cell.getRoom().getMiddleInStage();
                     if (enclosed) {
                         int[] o = this.oldt;
-                        int[] kor = {6,7,8};
+                        int[] kor = {6, 7, 8};
                         int v = roadTile;
                         roadTile = 3;
                         oldt = kor;
+                        if (booleanitVCell(i, true, j)) {
+                            prepCells(cell, level[i - 1][j]);
+                        }
                         if (booleanitHCell(j, true, i)) {
                             prepCells(cell, level[i][j - 1]);
-                        } else if (booleanitHCell(j, false, i)) {
-                            prepCells(cell, level[i][j + 1]);
-                        } else if (booleanitVCell(i, true, j)) {
-                            prepCells(cell, level[i - 1][j]);
-                        } else if (booleanitVCell(i, false, j)) {
+                        }
+                        if (booleanitVCell(i, false, j)) {
                             prepCells(cell, level[i + 1][j]);
+                        } 
+                        if (booleanitHCell(j, false, i)) {
+                            prepCells(cell, level[i][j + 1]);
                         }
                         roadTile = v;
                         oldt = o;
@@ -159,7 +162,7 @@ public class Corridor {
     }
 
     public void findCellsClosestAndGenerate() {
-        currentCell = new Cell(0,biome);
+        currentCell = new Cell(0, biome);
         int i = 0;
         int j = 0;
         boolean apu = false;
@@ -304,7 +307,7 @@ public class Corridor {
                     r.tilesh[i][j].checkTile(this.oldt, this.newt);
                 } else {
                     if (!r.tilesh[i][j].isInRoom()) {
-                        r.tilesh[i][j] = new Tile(roadTile,biome);
+                        r.tilesh[i][j] = new Tile(roadTile, biome);
                     }
                 }
             }

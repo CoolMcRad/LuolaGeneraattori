@@ -53,36 +53,6 @@ public class JTesting {
     public Timeout globalTimeout = new Timeout(3000);
 
     @Test
-    public void tileCreation() {
-        biome = 0;
-        assertEquals(0, t1.getType());
-        assertEquals("m", t1.getVisual());
-
-        t1 = new Tile(1,biome);
-        assertEquals(1, t1.getType());
-        assertEquals(" ", t1.getVisual());
-
-        t1 = new Tile(2,biome);
-        assertEquals(2, t1.getType());
-        assertEquals("D", t1.getVisual());
-
-        t1 = new Tile(3,biome);
-        assertEquals(3, t1.getType());
-        assertEquals(" ", t1.getVisual());
-
-        t1 = new Tile(4,biome);
-        assertEquals(4, t1.getType());
-        assertEquals(" ", t1.getVisual());
-    }
-
-    @Test
-    public void customTile() {
-        t1 = new Tile("Testi");
-        assertEquals(10, t1.getType());
-        assertEquals("Testi", t1.getVisual());
-    }
-
-    @Test
     public void roomCreation() {
         room = new Room(16, 16, false, true, biome);
         for (int i = 0; i < 16; i++) {
